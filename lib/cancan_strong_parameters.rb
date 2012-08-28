@@ -1,5 +1,5 @@
 require "cancan_strong_parameters/version"
-require "cancan_strong_parameters/cancan/controller_resource"
+require "cancan_strong_parameters/rails/controller/base"
 
 module CancanStrongParameters
 end

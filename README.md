@@ -2,6 +2,12 @@
 
 CanCan and [strong_parameters](https://github.com/rails/strong_parameters) are friends now!
 
+## Authors
+
+The majority of this gem is credited to @mckeed, who posted this gist: https://gist.github.com/2878508
+I (@colinyoung) helped put some of it together.
+
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -18,7 +24,14 @@ Or install it yourself as:
 
 ## Usage
 
-Just add it to your Gemfile! Use both CanCan and strong_parameters as normal.
+    1. Add it to your Gemfile
+    2. Wherever you use `load_and_authorize_resource`, also add:
+    
+        class PostsController < ApplicationController
+          ...
+          load_and_authorize_resource
+          permit_params post: [:name, :title, author: {:name}]
+        end
 
 ## Contributing
 
