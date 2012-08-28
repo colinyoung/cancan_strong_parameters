@@ -61,25 +61,38 @@ class ActionController::Base
   
   def self.filter_strong_params method, actions, keys # :nodoc:
     hash = keys.extract_options!
+    keys.flatten!
     if hash.present? && keys.present?
       prepend_before_filter :only => actions do
-        self.params = params.send method, *keys.flatten, hash
+        resource_name = self.class.resource_name
+        self.params[resource_name] = params[resource_name].send method, *[keys, self.class.attributized(hash)].flatten, hash
       end
     elsif hash.present?
       prepend_before_filter :only => actions do
         self.params.merge! params.send(method, hash)
       end
     else
-      resource_name = self.to_s.sub("Controller", "").underscore.split('/').last.singularize
       prepend_before_filter :only => actions do
+        resource_name = self.class.resource_name        
         if params.has_key?(resource_name)
-          self.params[resource_name] = params[resource_name].send method, *keys.flatten
-          raise params.to_yaml
+          self.params[resource_name] = params[resource_name].send method, *keys
         else
           self.params = params.send method, *keys
         end
       end
     end
+  end
+  
+  def self.resource_name
+    self.to_s.sub("Controller", "").underscore.split('/').last.singularize
+  end
+  
+  def self.attributized(hash)
+    h = {}
+    hash.each do |k,v|
+      h[:"#{k}_attributes"] = v
+    end
+    h.keys # @todo Allows all nested values! Insecure, but works
   end
 end
 
