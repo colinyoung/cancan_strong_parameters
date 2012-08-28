@@ -63,7 +63,7 @@ class ActionController::Base
     hash = keys.extract_options!
     if hash.present? && keys.present?
       prepend_before_filter :only => actions do
-        self.params = params.send method, *keys, hash
+        self.params = params.send method, *keys.flatten, hash
       end
     elsif hash.present?
       prepend_before_filter :only => actions do
@@ -73,7 +73,8 @@ class ActionController::Base
       resource_name = self.to_s.sub("Controller", "").underscore.split('/').last.singularize
       prepend_before_filter :only => actions do
         if params.has_key?(resource_name)
-          self.params[resource_name] = params[resource_name].send method, *keys
+          self.params[resource_name] = params[resource_name].send method, *keys.flatten
+          raise params.to_yaml
         else
           self.params = params.send method, *keys
         end
