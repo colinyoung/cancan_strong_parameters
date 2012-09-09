@@ -20,37 +20,37 @@ class ActionController::Base
   def self.permit_params *keys
     filter_strong_params :permit, [:create, :update], keys
   end
-  
+
   # Like permit_params, but only applies to create action
   #
   def self.permit_params_on_create *keys
     filter_strong_params :permit, :create, keys
   end
-  
+
   # Like permit_params, but only applies to update action
   #
   def self.permit_params_on_update *keys
     filter_strong_params :permit, :update, keys
   end
-  
+
   # Like permit_params, but marks the params required
   #
   def self.require_params *keys
     filter_strong_params :require, [:create, :update], keys
   end
-  
+
   # Like require_params, but only applies to create action
   #
-  def self.require_params *keys
+  def self.require_params_on_create *keys
     filter_strong_params :require, :create, keys
   end
-  
+
   # Like require_params, but only applies to update action
   #
-  def self.require_params *keys
+  def self.require_params_on_update *keys
     filter_strong_params :require, :update, keys
   end
-  
+
   # Does a permit! at every level of the params to let everything through
   #
   def self.permit_all_params options = {}
@@ -58,7 +58,7 @@ class ActionController::Base
       self.params.deep_permit!
     end
   end
-  
+
   def self.filter_strong_params method, actions, keys # :nodoc:
     hash = keys.extract_options!
     keys.flatten!
@@ -73,7 +73,7 @@ class ActionController::Base
       end
     else
       prepend_before_filter :only => actions do
-        resource_name = self.class.resource_name        
+        resource_name = self.class.resource_name
         if params.has_key?(resource_name)
           self.params[resource_name] = params[resource_name].send method, *keys
         else
@@ -82,11 +82,11 @@ class ActionController::Base
       end
     end
   end
-  
+
   def self.resource_name
     self.to_s.sub("Controller", "").underscore.split('/').last.singularize
   end
-  
+
   def self.attributized(hash)
     h = {}
     hash.each do |k,v|
