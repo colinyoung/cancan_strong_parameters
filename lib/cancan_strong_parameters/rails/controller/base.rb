@@ -62,10 +62,13 @@ class ActionController::Base
   def self.filter_strong_params method, actions, keys # :nodoc:
     hash = keys.extract_options!
     keys.flatten!
-    if hash.present? && keys.present?
+    
+    # Handle attributes if permitted attributes are given for nested models
+    if (hash.present? && keys.present?) || (hash.select{|k,v| v.is_a?(Array)} == hash)
       prepend_before_filter :only => actions do
         resource_name = self.class.resource_name
-        self.params[resource_name] = params[resource_name].send method, *[keys, self.class.attributized(hash)].flatten, hash
+        whitelist = self.class.hashified([*keys.flatten, self.class.attributized(hash)])
+        self.params[resource_name] = params[resource_name].send method, whitelist
       end
     elsif hash.present?
       prepend_before_filter :only => actions do
@@ -88,11 +91,20 @@ class ActionController::Base
   end
 
   def self.attributized(hash)
-    h = {}
-    hash.each do |k,v|
-      h[:"#{k}_attributes"] = v
+    Hash.new.tap do |h|
+      hash.each do |k,v|
+        h[:"#{k}_attributes"] = v
+      end
     end
-    h.keys # @todo Allows all nested values! Insecure, but works
+  end
+  
+  def self.hashified(whitelist)
+    hash = whitelist.extract_options!
+    array = whitelist.dup
+    whitelist = (hash || {})
+    array.map {|v| whitelist[v] = nil }
+    
+    whitelist
   end
 end
 
