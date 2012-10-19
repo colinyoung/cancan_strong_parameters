@@ -67,8 +67,8 @@ class ActionController::Base
     if (hash.present? && keys.present?) || (hash.select{|k,v| v.is_a?(Array)} == hash)
       prepend_before_filter :only => actions do
         resource_name = self.class.resource_name
-        whitelist = self.class.hashified([*keys.flatten, self.class.attributized(hash)])
-        self.params[resource_name] = params[resource_name].send method, whitelist
+        hash = self.class.attributized(hash)
+        self.params[resource_name] = params[resource_name].send method, *[*keys.flatten, hash]
       end
     elsif hash.present?
       prepend_before_filter :only => actions do
@@ -99,10 +99,10 @@ class ActionController::Base
   end
   
   def self.hashified(whitelist)
-    hash = whitelist.extract_options!
-    array = whitelist.dup
-    whitelist = (hash || {})
-    array.map {|v| whitelist[v] = nil }
+    hash = whitelist.extract_options! if whitelist.is_a?(Array)
+    array = whitelist.dup    
+    whitelist = (hash || {}) if hash
+    array.map {|v| whitelist[v] = true }
     
     whitelist
   end
