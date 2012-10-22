@@ -43,4 +43,5 @@ Or install it yourself as:
 
 ## Changelog
 
+* Fixed some issues with nested form subfields in `permit_params`
 * Made compatible for nested forms
