@@ -97,15 +97,6 @@ class ActionController::Base
       end
     end
   end
-  
-  def self.hashified(whitelist)
-    hash = whitelist.extract_options! if whitelist.is_a?(Array)
-    array = whitelist.dup    
-    whitelist = (hash || {}) if hash
-    array.map {|v| whitelist[v] = true }
-    
-    whitelist
-  end
 end
 
 module ActionController
