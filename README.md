@@ -32,6 +32,10 @@ Or install it yourself as:
           load_and_authorize_resource
           permit_params post: [:name, :title, author: {:name}]
         end
+        
+## Testing
+
+Run with `bundle exec rake test`.
 
 ## Contributing
 
