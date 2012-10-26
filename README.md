@@ -54,3 +54,4 @@ Run with `bundle exec rake test`.
 * Added default allows for _destroy.
 * Tests pass in Travis.
 * Fixes for irregular parameters posted like {"child_attributes" => {"0" => {}}}.
+* Fixed a major security problem where I was manually inserting IDs - should be allowed by default, but not manually added
