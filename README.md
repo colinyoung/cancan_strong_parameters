@@ -2,6 +2,8 @@
 
 CanCan and [strong_parameters](https://github.com/rails/strong_parameters) are friends now!
 
+[![Build Status](https://secure.travis-ci.org/colinyoung/cancan_strong_parameters.png)](http://travis-ci.org/colinyoung/cancan_strong_parameters)
+
 ## Authors
 
 The majority of this gem is credited to @mckeed, who posted this gist: https://gist.github.com/2878508
