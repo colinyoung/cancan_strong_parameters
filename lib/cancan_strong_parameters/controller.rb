@@ -1,7 +1,7 @@
 module CancanStrongParameters
   module Controller
     
-    HASH_DEFAULTS = [:_destroy, :_delete]
+    HASH_DEFAULTS = [:id, :_destroy, :_delete]
     
     module ClassMethods
       # Use this with CanCan's load_resource to permit a set of params before
@@ -132,7 +132,6 @@ class Hash
     
     Array.new.tap do |a|
       self.each do |k,v|
-        v[:id] = k if k.is_i? or k.is_hex?
         a << v.standardized
       end
     end
