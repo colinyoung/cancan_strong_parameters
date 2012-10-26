@@ -133,7 +133,7 @@ class Hash
     Array.new.tap do |a|
       self.each do |k,v|
         v[:id] = k if k.is_i? or k.is_hex?
-        a << v
+        a << v.standardized
       end
     end
   end
@@ -152,7 +152,7 @@ class Array
   end
 end
 
-class ActionController::Parameters
+class ActiveSupport::HashWithIndifferentAccess
   
   # Takes params that are passed in for nested_forms (like the example below) and cleans them up.
   #

@@ -49,7 +49,15 @@ class PostsControllerTest < ActionController::TestCase
         title: "Hello",
         comments_attributes: {
           "0" => {
-            body: "Comment 1"
+            body: "Comment 1",
+            tags_attributes: {
+              "0" => {
+                name: "article"
+              },
+              "1" => {
+                name: "post"
+              },
+            }
           },
           "1" => {
             body: "Comment 2"
@@ -68,7 +76,14 @@ class PostsControllerTest < ActionController::TestCase
         title: "Hello",
         comments_attributes: [
           {
-            body: "Comment 1"
+            body: "Comment 1",
+            tags_attributes: [{
+                name: "article"
+              },
+              {
+                name: "post"
+              }
+            ]
           },
           {
             body: "Comment 2"
