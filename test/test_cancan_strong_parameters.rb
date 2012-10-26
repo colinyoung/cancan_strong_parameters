@@ -29,4 +29,17 @@ class PostsControllerTest < ActionController::TestCase
       ActiveSupport::HashWithIndifferentAccess.new(assigns(:post_attributes)),
       ActiveSupport::HashWithIndifferentAccess.new(params[:post])
   end
+  
+  test "keeps _destroy keys" do  
+    params = {
+      post: {
+        _destroy: true
+      }
+    }
+    
+    put :update, {id: 1}.merge(params)
+    assert_equal \
+      ActiveSupport::HashWithIndifferentAccess.new(assigns(:post_attributes)),
+      ActiveSupport::HashWithIndifferentAccess.new(params[:post])
+  end
 end

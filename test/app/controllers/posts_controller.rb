@@ -11,4 +11,6 @@ class PostsController < ActionController::Base
     @post_attributes = params[:post]
     render json: @post
   end
+  alias_method :update, :create
+  
 end
