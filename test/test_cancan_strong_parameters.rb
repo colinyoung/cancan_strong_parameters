@@ -94,4 +94,35 @@ class PostsControllerTest < ActionController::TestCase
         ]
       })
   end
+  
+  test "can handle multiple items but with only new itesm" do
+    params = {
+      post: {
+        title: "Hello",
+        comments_attributes: {
+          "new_3904949" => {
+            body: "Comment 3",
+            tags_attributes: {
+              "new_23040234" => {
+                name: "article"
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    post :create, params
+    assert_equal \
+      ActiveSupport::HashWithIndifferentAccess.new(assigns(:post_attributes)),
+      ActiveSupport::HashWithIndifferentAccess.new({
+        title: "Hello",
+        comments_attributes: [{
+          body: "Comment 3",
+          tags_attributes: [{
+              name: "article"
+          }]
+        }]
+      })
+  end
 end
