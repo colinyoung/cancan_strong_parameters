@@ -51,3 +51,6 @@ Run with `bundle exec rake test`.
 
 * Fixed some issues with nested form subfields in `permit_params`
 * Made compatible for nested forms
+* Added default allows for _destroy.
+* Tests pass in Travis.
+* Fixes for irregular parameters posted like {"child_attributes" => {"0" => {}}}.

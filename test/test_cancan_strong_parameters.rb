@@ -42,4 +42,41 @@ class PostsControllerTest < ActionController::TestCase
       ActiveSupport::HashWithIndifferentAccess.new(assigns(:post_attributes)),
       ActiveSupport::HashWithIndifferentAccess.new(params[:post])
   end
+  
+  test "can handle multiple items" do
+    params = {
+      post: {
+        title: "Hello",
+        comments_attributes: {
+          "0" => {
+            body: "Comment 1"
+          },
+          "1" => {
+            body: "Comment 2"
+          },
+          "new_3904949" => {
+            body: "Comment 3"
+          }
+        }
+      }
+    }
+    
+    post :create, params
+    assert_equal \
+      ActiveSupport::HashWithIndifferentAccess.new(assigns(:post_attributes)),
+      ActiveSupport::HashWithIndifferentAccess.new({
+        title: "Hello",
+        comments_attributes: [
+          {
+            body: "Comment 1"
+          },
+          {
+            body: "Comment 2"
+          },
+          {
+            body: "Comment 3"
+          }
+        ]
+      })
+  end
 end

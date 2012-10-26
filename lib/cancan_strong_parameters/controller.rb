@@ -76,7 +76,7 @@ module CancanStrongParameters
           
           prepend_before_filter :only => actions do
             resource_name = self.class.resource_name
-            self.params[resource_name] = params[resource_name].send method, *[*keys.flatten + @@defaults, @@hash]
+            self.params[resource_name] = params[resource_name].standardized.send method, *[*keys.flatten + @@defaults, @@hash]
           end
         elsif hash.present?
           prepend_before_filter :only => actions do
@@ -119,13 +119,29 @@ class Hash
     
     Hash.new.tap do |h|
       self.each do |k,v|
-        h[:"#{k}_attributes"] = self.delete(k).attributized + defaults
+        h[:"#{k}_attributes"] = self[k].attributized + defaults
+      end
+    end
+  end
+  
+  # Converts keyed nested_forms (like task_attributes: {"0" => {}}) to normal params arrays.
+  def to_parameter_array
+    return self if self.empty?
+    
+    return self unless (k = self.keys.first).is_a?(String) and k[0..3] == "new_" or k.is_i? or k.is_hex?
+    
+    Array.new.tap do |a|
+      self.each do |k,v|
+        v[:id] = k if k.is_i? or k.is_hex?
+        a << v
       end
     end
   end
 end
 
 class Array
+  
+  # Attributizes each element in an array
   def attributized
     Array.new.tap do |a|
       self.each do |v|
@@ -133,5 +149,36 @@ class Array
         a << v
       end
     end
+  end
+end
+
+class ActionController::Parameters
+  
+  # Takes params that are passed in for nested_forms (like the example below) and cleans them up.
+  #
+  # post: {
+  #   comments_attributes: {
+  #     "0" => {},
+  #     "1" => {},  
+  #     "new_23023032" => {}
+  #   }
+  # }
+  #
+  def standardized
+    ActionController::Parameters.new.tap do |h|
+      self.each do |k,v|
+        h[k] = v.is_a?(Hash) ? v.to_parameter_array : v
+      end
+    end
+  end
+end
+
+class String
+  def is_i?
+    !!(self =~ /^[-+]?[0-9]+$/)
+  end
+  
+  def is_hex?
+    !!(self =~ /^[0-9a-f]+$/)
   end
 end
