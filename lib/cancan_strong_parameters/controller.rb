@@ -71,12 +71,12 @@ module CancanStrongParameters
         # Handle attributes if permitted attributes are given for nested models
         if (hash.present? && keys.present?) || (hash.select{|k,v| v.is_a?(Array)} == hash)
           
-          @@defaults = CancanStrongParameters::Controller::HASH_DEFAULTS
-          @@hash = hash.attributized
+          defaults = CancanStrongParameters::Controller::HASH_DEFAULTS
+          hash = hash.attributized
           
           prepend_before_filter :only => actions do
             resource_name = self.class.resource_name
-            self.params[resource_name] = params[resource_name].standardized.send method, *[*keys.flatten + @@defaults, @@hash]
+            self.params[resource_name] = params[resource_name].standardized.send method, *[*keys.flatten + defaults, hash]
           end
         elsif hash.present?
           prepend_before_filter :only => actions do
