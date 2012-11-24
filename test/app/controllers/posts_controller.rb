@@ -11,6 +11,14 @@ class PostsController < ActionController::Base
     @post_attributes = params[:post]
     render json: @post
   end
-  alias_method :update, :create
+  
+  def update
+    @post = Post.find(params[:id])
+    if @post.update_attributes(params[:post])
+      render json: @post
+    else
+      render json: { errors: @post.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
   
 end

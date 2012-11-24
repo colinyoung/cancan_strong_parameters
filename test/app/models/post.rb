@@ -3,9 +3,26 @@ class Post
   include ActiveModel::MassAssignmentSecurity
   include ActiveModel::AttributeMethods
   
-  attr_accessible :body, :content
+  attr_accessor :title, :body
+  attr_accessible :title, :body
   
   def initialize(attributes = {})
     @attributes = attributes
+  end
+  
+  # Fake persistence
+  def self.sample_post
+    new(title: "Sample post", body: "Sample body")
+  end
+  
+  def self.find(*args)
+    sample_post
+  end
+  
+  def update_attributes(params)
+    params.map do |k,v|
+      setter = :"#{k}=" # setter
+      self.send(setter, v) if self.respond_to?(setter)
+    end
   end
 end

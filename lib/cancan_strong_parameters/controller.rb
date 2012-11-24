@@ -94,8 +94,12 @@ module CancanStrongParameters
         end
       end
 
-      def resource_name
-        self.to_s.sub("Controller", "").underscore.split('/').last.singularize
+      def resource_name(name_to_set=nil)
+        unless name_to_set.present?
+          @resource_name ||= self.to_s.sub("Controller", "").underscore.split('/').last.singularize
+        else
+          @resource_name = name_to_set
+        end
       end
     end
     

@@ -34,4 +34,6 @@ Config::Application.initialize!
 
 Config::Application.routes.draw do
   resources :posts
+  
+  match 'title/:id', to: 'title#update', via: :put
 end
