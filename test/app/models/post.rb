@@ -12,7 +12,7 @@ class Post
   
   # Fake persistence
   def self.sample_post
-    new(title: "Sample post", body: "Sample body")
+    new(:title => "Sample post", :body => "Sample body")
   end
   
   def self.find(*args)
