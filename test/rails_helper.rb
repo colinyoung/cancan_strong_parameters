@@ -5,8 +5,6 @@ ENV["RAILS_ENV"] ||= 'test'
 
 require 'rubygems'
 
-require 'debugger'
-
 gem 'actionpack', '>= 3.0.0'
 gem 'activesupport', '>= 3.0.0'
 gem 'activemodel', '>= 3.0.0'
