@@ -15,7 +15,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "require_all"
   gem.add_development_dependency "minitest", "~> 3.0"
   gem.add_development_dependency "rails"
-  gem.add_development_dependency "debugger"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
