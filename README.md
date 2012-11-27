@@ -1,6 +1,6 @@
 # CancanStrongParameters
 
-CanCan and [strong_parameters](https://github.com/rails/strong_parameters) are friends now!
+[CanCan](ryanb/cancan) and [strong_parameters](rails/strong_parameters) are friends now!
 
 [![Build Status](https://secure.travis-ci.org/colinyoung/cancan_strong_parameters.png)](http://travis-ci.org/colinyoung/cancan_strong_parameters)
 
@@ -24,7 +24,7 @@ Or install it yourself as:
 
 ## Usage
 
-    1. Add it to your Gemfile
+1. Add `gem "cancan_strong_parameters"` to your Gemfile
 2. Wherever you use `load_and_authorize_resource`, also permit your parameters:
 
    ```ruby
@@ -34,7 +34,7 @@ Or install it yourself as:
       
       permit_params :body, tags: [:name]
       # --> permit_params allows parameters but doesn't require them.
-      # In the following, :tags are a nested resource of post, while
+      # In the preceding, :tags are a nested resource of post, while
       # :body is an attribute of a Post.
       #
       # :tags is plural here because it's a has_many association, but
