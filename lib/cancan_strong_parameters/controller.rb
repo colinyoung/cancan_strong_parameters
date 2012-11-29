@@ -1,7 +1,7 @@
 module CancanStrongParameters
   module Controller
     
-    HASH_DEFAULTS = [:id, :_destroy, :_delete]
+    HASH_DEFAULTS = ['id', '_destroy', '_delete']
     
     module ClassMethods
       # Use this with CanCan's load_resource to permit a set of params before
@@ -72,11 +72,24 @@ module CancanStrongParameters
         if (hash.present? && keys.present?) || (hash.select{|k,v| v.is_a?(Array)} == hash)
           
           defaults = CancanStrongParameters::Controller::HASH_DEFAULTS
-          hash = hash.attributized
+          
+          # @todo We have to stringify everything for 1.8.7 due to a bug in `strong_parameters`.
+          # More at https://github.com/rails/strong_parameters/pull/51
+          hash = hash.attributized.stringified
           
           prepend_before_filter :only => actions do
             resource_name = self.class.resource_name
-            self.params[resource_name] = params[resource_name].standardized.send method, *[*keys.flatten + defaults, hash]
+            
+            # @todo We have to stringify everything for 1.8.7 due to a bug in `strong_parameters`.
+            # More at https://github.com/rails/strong_parameters/pull/51
+            parameters = keys.flatten.map! {|k| k.to_s } + defaults
+            parameters << ActionController::Parameters.new(hash)
+            
+            # original: parameters = keys.flatten + defaults
+            #           parameters << hash
+            return warn("Not updating - no parameters key present for #{resource_name}") unless params[resource_name]
+            
+            self.params[resource_name] = params[resource_name].standardized.send method, *parameters
           end
         elsif hash.present?
           prepend_before_filter :only => actions do
@@ -86,9 +99,9 @@ module CancanStrongParameters
           prepend_before_filter :only => actions do
             resource_name = self.class.resource_name
             if params.has_key?(resource_name)
-              self.params[resource_name] = params[resource_name].send method, *keys
+              self.params[resource_name] = params[resource_name].send method, *keys.stringified
             else
-              self.params = params.send method, *keys
+              self.params = params.send method, *keys.stringified
             end
           end
         end
@@ -105,6 +118,12 @@ module CancanStrongParameters
     
     def self.included(base)
       base.extend(ClassMethods)
+    end
+    
+    # Errors
+    def warn msg
+      return unless Rails and Rails.logger
+      Rails.logger.warn(msg)
     end
 
   end
@@ -183,5 +202,40 @@ class String
   
   def is_hex?
     !!(self =~ /^[0-9a-f]+$/)
+  end
+end
+
+# @todo Can be remove when new version of `strong_parameters` (>=0.1.5) is released.
+class Hash
+  def stringified
+    Hash.new.tap do |h|
+      each do |key, value|
+        value = case value
+        when Symbol
+          value.to_s
+        when Hash
+          value.indifferent
+        when Array
+          value.stringified
+        end
+        h[key.to_s] = value
+      end
+    end
+  end
+end
+
+class Array
+  def stringified
+    Array.new.tap do |a|
+      each do |value|
+        value = if value.is_a? Hash
+          value.stringified.indifferent 
+        else
+          value.to_s
+        end
+        
+        a << value
+      end
+    end
   end
 end

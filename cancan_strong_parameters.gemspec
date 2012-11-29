@@ -14,6 +14,7 @@ Gem::Specification.new do |gem|
   
   gem.add_development_dependency "require_all"
   gem.add_development_dependency "minitest", "~> 3.0"
+  gem.add_development_dependency "minitest_tu_shim"
   gem.add_development_dependency "rails"
 
   gem.files         = `git ls-files`.split($\)

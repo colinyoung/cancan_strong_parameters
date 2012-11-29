@@ -6,9 +6,9 @@ class TitleControllerTest < ActionController::TestCase
     
     new_title = 'Changed title'
     put :update, 
-      id: 1,
-      post: {
-        title: new_title
+      :id => 1,
+      :post => {
+        :title => new_title
       }
     
     assert_equal assigns[:post].title, new_title

@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class PostsControllerTest < ActionController::TestCase
+  
   test "should not clip off deep params" do
     params = {
       :post => {
@@ -16,9 +17,7 @@ class PostsControllerTest < ActionController::TestCase
     }
     
     post :create, params
-    assert_equal \
-      ActiveSupport::HashWithIndifferentAccess.new(assigns(:post_attributes)),
-      ActiveSupport::HashWithIndifferentAccess.new(params[:post])
+    assigns(:post_attributes).indifferent.must_have_same_content_as params[:post].indifferent
   end
   
   test "keeps _destroy keys" do  
@@ -29,9 +28,7 @@ class PostsControllerTest < ActionController::TestCase
     }
     
     post :create, params
-    assert_equal \
-      ActiveSupport::HashWithIndifferentAccess.new(assigns(:post_attributes)),
-      ActiveSupport::HashWithIndifferentAccess.new(params[:post])
+    assigns(:post_attributes).indifferent.must_have_same_content_as params[:post].indifferent
   end
   
   test "can handle multiple items" do
@@ -43,50 +40,49 @@ class PostsControllerTest < ActionController::TestCase
             :body => "Comment 1",
             :tags_attributes => {
               "0" => {
-                name: "article"
+                :name => "article"
               },
               "1" => {
-                name: "post"
+                :name => "post"
               },
             }
           },
           "1" => {
-            body: "Comment 2"
+            :body => "Comment 2"
           },
           "new_3904949" => {
-            body: "Comment 3"
+            :body => "Comment 3"
           }
         }
       }
     }
     
     post :create, params
-    assert_equal \
-      ActiveSupport::HashWithIndifferentAccess.new(assigns(:post_attributes)),
-      ActiveSupport::HashWithIndifferentAccess.new({
-        :title => "Hello",
-        :comments_attributes => [
-          {
-            :body => "Comment 1",
-            :tags_attributes => [{
-                :name => "article"
-              },
-              {
-                :name => "post"
-              }
-            ]
-          },
-          {
-            :body => "Comment 2"
-          },
-          {
-            :body => "Comment 3"
-          }
-        ]
-      })
+    expected = {
+      :title => "Hello",
+      :comments_attributes => [
+        {
+          :body => "Comment 1",
+          :tags_attributes => [{
+              :name => "post"
+            },
+            {
+              :name => "article"
+            }
+          ]
+        },
+        {
+          :body => "Comment 2"
+        },
+        {
+          :body => "Comment 3"
+        }
+      ]
+    }
+    assigns(:post_attributes).must_have_same_content_as expected.indifferent
   end
   
-  test "can handle multiple items but with only new itesm" do
+  test "can handle multiple items but with only new items" do
     params = {
       :post => {
         :title => "Hello",
@@ -104,16 +100,15 @@ class PostsControllerTest < ActionController::TestCase
     }
     
     post :create, params
-    assert_equal \
-      ActiveSupport::HashWithIndifferentAccess.new(assigns(:post_attributes)),
-      ActiveSupport::HashWithIndifferentAccess.new({
-        :title => "Hello",
-        :comments_attributes => [{
-          :body => "Comment 3",
-          :tags_attributes => [{
-              :name => "article"
-          }]
+    expected = {
+      :title => "Hello",
+      :comments_attributes => [{
+        :body => "Comment 3",
+        :tags_attributes => [{
+            :name => "article"
         }]
-      })
+      }]
+    }
+    assigns(:post_attributes).indifferent.must_have_same_content_as expected.indifferent
   end
 end

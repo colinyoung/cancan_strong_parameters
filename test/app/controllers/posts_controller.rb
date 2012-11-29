@@ -3,7 +3,8 @@ class PostsController < ActionController::Base
   
   permit_params :title, :content,
     :comments => [
-      :body, :tags => [:name]
+      :body, 
+      { :tags => [ :name ] } # This is fugly, use 1.9!
     ]
     
   def create
