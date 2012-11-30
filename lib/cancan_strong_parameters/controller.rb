@@ -23,19 +23,19 @@ module CancanStrongParameters
       # supply a resource name for #load_resource
       #
       def permit_params *keys
-        filter_strong_params :permit, [:create, :update], keys
+        filter_strong_params :permit, [:all], keys
       end
 
       # Like permit_params, but only applies to create action
       #
       def permit_params_on_create *keys
-        filter_strong_params :permit, :create, keys
+        filter_strong_params :permit, [:create], keys
       end
 
       # Like permit_params, but only applies to update action
       #
       def permit_params_on_update *keys
-        filter_strong_params :permit, :update, keys
+        filter_strong_params :permit, [:update], keys
       end
 
       # Like permit_params, but marks the params required
@@ -47,26 +47,30 @@ module CancanStrongParameters
       # Like require_params, but only applies to create action
       #
       def require_params_on_create *keys
-        filter_strong_params :require, :create, keys
+        filter_strong_params :require, [:create], keys
       end
 
       # Like require_params, but only applies to update action
       #
       def require_params_on_update *keys
-        filter_strong_params :require, :update, keys
+        filter_strong_params :require, [:update], keys
       end
 
       # Does a permit! at every level of the params to let everything through
       #
       def permit_all_params options = {}
-        prepend_before_filter options.reverse_merge(:only => [:create, :update]) do
+        prepend_before_filter do
           self.params.deep_permit!
         end
       end
 
       def filter_strong_params method, actions, keys # :nodoc:
+        # Get hash from end of array
         hash = keys.extract_options!
         keys.flatten!
+        
+        # Filter_options is passed to our before filter, e.g. sets when they run
+        filter_options = actions == [:all] ? {} : { :only => actions }
   
         # Handle attributes if permitted attributes are given for nested models
         if (hash.present? && keys.present?) || (hash.select{|k,v| v.is_a?(Array)} == hash)
@@ -77,7 +81,7 @@ module CancanStrongParameters
           # More at https://github.com/rails/strong_parameters/pull/51
           hash = hash.attributized.stringified
           
-          prepend_before_filter :only => actions do
+          prepend_before_filter(filter_options) do
             resource_name = self.class.resource_name
             
             # @todo We have to stringify everything for 1.8.7 due to a bug in `strong_parameters`.
@@ -92,11 +96,11 @@ module CancanStrongParameters
             self.params[resource_name] = params[resource_name].standardized.send method, *parameters
           end
         elsif hash.present?
-          prepend_before_filter :only => actions do
+          prepend_before_filter(filter_options) do
             self.params.merge! params.send(method, hash)
           end
         else
-          prepend_before_filter :only => actions do
+          prepend_before_filter(filter_options) do
             resource_name = self.class.resource_name
             if params.has_key?(resource_name)
               self.params[resource_name] = params[resource_name].send method, *keys.stringified
