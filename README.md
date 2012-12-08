@@ -25,7 +25,7 @@ Or install it yourself as:
 ## Usage
 
 1. Add `gem "cancan_strong_parameters"` to your Gemfile
-2. Wherever you use `load_and_authorize_resource`, also permit your parameters:
+2. In your controllers, wherever you use `load_and_authorize_resource` (and similar CanCan methods), also permit your parameters:
 
    ```ruby
    class PostsController < ApplicationController
