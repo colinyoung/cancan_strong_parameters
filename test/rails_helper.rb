@@ -20,7 +20,7 @@ require "rack/test"
 root = File.expand_path(File.dirname(__FILE__))
 
 # Define the application and configuration
-module Config
+module Test
   class Application < ::Rails::Application
     # configuration here if needed
     config.active_support.deprecation = :stderr 
@@ -28,9 +28,9 @@ module Config
 end
 
 # Initialize the application
-Config::Application.initialize!
+Test::Application.initialize!
 
-Config::Application.routes.draw do
+Test::Application.routes.draw do
   resources :posts
   
   match 'title/:id', :to => 'title#update', :via => :put
