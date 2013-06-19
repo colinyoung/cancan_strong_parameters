@@ -5,7 +5,8 @@ class PostsController < ActionController::Base
     :comments => [
       :body, 
       { :tags => [ :name ] } # This is fugly, use 1.9!
-    ]
+    ],
+    :label_ids => Array
     
   def create
     @post = Post.new(params[:post])

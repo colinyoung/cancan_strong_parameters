@@ -58,6 +58,20 @@ Or install it yourself as:
       attr_accessible :title, :body, :tags_attributes
    end
    ```
+
+## Checkboxes
+
+_Credit: @jlee42_
+
+With 0.3, `cancan_strong_parameters` now supports checkboxes in forms, like `tag_ids`.
+
+In order to avoid confusion with other nested attributes in a call to `permit_params`, please use the actual `Array` class object:
+
+```ruby
+class BlogPost < ActiveModel::Base
+  permit_params :title, :content, tag_ids: Array
+end
+```
         
 ## Testing
 

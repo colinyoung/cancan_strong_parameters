@@ -140,7 +140,11 @@ class Hash
     
     Hash.new.tap do |h|
       self.each do |k,v|
-        h[:"#{k}_attributes"] = self[k].attributized + defaults
+        if v.respond_to? :attributized
+          h[:"#{k}_attributes"] = v.attributized + defaults
+        else
+          h[k] = v == Array ? [] : v
+        end
       end
     end
   end

@@ -3,8 +3,8 @@ class Post
   include ActiveModel::MassAssignmentSecurity
   include ActiveModel::AttributeMethods
   
-  attr_accessor :title, :body
-  attr_accessible :title, :body
+  attr_accessor :title, :body, :label_ids
+  attr_accessible :title, :body, :label_ids
   
   def initialize(attributes = {})
     @attributes = attributes

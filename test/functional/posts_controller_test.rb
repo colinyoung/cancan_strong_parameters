@@ -111,4 +111,15 @@ class PostsControllerTest < ActionController::TestCase
     }
     assigns(:post_attributes).indifferent.must_have_same_content_as expected.indifferent
   end
+
+  test "it can permit and post checkbox vars (ending in _ids)" do
+    params = {
+      :post => {
+        :label_ids => ['1','2','3']
+      }
+    }
+
+    post :create, params
+    assigns(:post_attributes).indifferent['label_ids'].must_equal ['1','2','3']
+  end
 end
