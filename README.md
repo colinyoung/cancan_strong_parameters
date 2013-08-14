@@ -1,6 +1,6 @@
 # CancanStrongParameters
 
-[CanCan](ryanb/cancan) and [strong_parameters](rails/strong_parameters) (and other, similar resource-loading gems, like [ActiveAdmin](http://www.activeadmin.info/) are friends now!
+[strong_parameters](rails/strong_parameters) and [CanCan](ryanb/cancan) (and others, like ActiveAdmin) are friends now!
 
 This gem makes it easy to control the authorization of params used by CanCan.
 
