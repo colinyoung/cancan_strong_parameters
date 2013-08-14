@@ -1,6 +1,8 @@
 # CancanStrongParameters
 
-[CanCan](ryanb/cancan) and [strong_parameters](rails/strong_parameters) are friends now!
+[CanCan](ryanb/cancan) and [strong_parameters](rails/strong_parameters) (and other, similar resource-loading gems, like [ActiveAdmin](http://www.activeadmin.info/) are friends now!
+
+This gem makes it easy to control the authorization of params used by CanCan.
 
 [![Build Status](https://secure.travis-ci.org/colinyoung/cancan_strong_parameters.png)](http://travis-ci.org/colinyoung/cancan_strong_parameters)
 
@@ -72,6 +74,20 @@ class BlogPost < ActiveModel::Base
   permit_params :title, :content, tag_ids: Array
 end
 ```
+
+## Usage with other gems
+
+It's possible to use `cancan_strong_parameters` with other gems, like Active Admin:
+
+```ruby
+ActiveAdmin.register Member do
+  controller do
+    permit_params :project_id, :name, :email
+  end
+end
+```
+
+(Thanks to @joshhepworth!)
         
 ## Testing
 
