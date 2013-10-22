@@ -9,7 +9,6 @@ Gem::Specification.new do |gem|
   gem.homepage      = "https://github.com/colinyoung/cancan_strong_parameters"
   
   gem.add_dependency "cancan"
-  gem.add_dependency "strong_parameters", ">= 0.1.6"
   gem.add_dependency "activesupport"
   
   gem.add_development_dependency "require_all"
