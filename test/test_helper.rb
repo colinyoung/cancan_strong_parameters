@@ -2,7 +2,6 @@ require 'require_all'
 
 require 'minitest/autorun'
 
-require 'strong_parameters'
 require 'cancan_strong_parameters'
 
 ## Boot up an instance of rails
