@@ -1,5 +1,3 @@
-require 'strong_parameters'
-
 class ActionController::Base
   include CancanStrongParameters::Controller
 end
