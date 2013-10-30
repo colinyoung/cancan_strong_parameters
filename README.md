@@ -24,6 +24,14 @@ Or install it yourself as:
 
     $ gem install cancan_strong_parameters
 
+## Rails 3
+
+Rails 3 users must require `strong_parameters` in their Gemfiles manually.
+
+    gem 'strong_parameters', '>= 0.1.6'
+
+Alternatively, you can use versions of this gem below 0.3.
+
 ## Usage
 
 1. Add `gem "cancan_strong_parameters"` to your Gemfile
