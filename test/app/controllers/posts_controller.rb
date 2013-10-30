@@ -1,12 +1,11 @@
 class PostsController < ActionController::Base
   include CancanStrongParameters::Controller
   
-  permit_params :title, :content,
+  permit_params :title, :content, :label_ids,
     :comments => [
       :body, 
       { :tags => [ :name ] } # This is fugly, use 1.9!
-    ],
-    :label_ids => Array
+    ]
     
   def create
     @post = Post.new(params[:post])
