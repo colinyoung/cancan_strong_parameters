@@ -16,6 +16,13 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "minitest_tu_shim"
   gem.add_development_dependency "rails"
 
+  # For testing
+  gem.add_development_dependency "strong_parameters", "0.1.6"
+  gem.add_development_dependency 'actionpack', '~> 3.0'
+  gem.add_development_dependency 'activesupport', '~> 3.0'
+  gem.add_development_dependency 'activemodel', '~> 3.0'
+  gem.add_development_dependency 'railties', '~> 3.0'
+
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
