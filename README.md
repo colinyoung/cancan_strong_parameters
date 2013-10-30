@@ -103,6 +103,10 @@ Run with `bundle exec rake test`.
 
 ## Contributing
 
+First, thank you to @joshhepworth, @sespindola, and @seifsallam for their code and issue contributions.
+
+To become a contributor:
+
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Added some feature'`)
