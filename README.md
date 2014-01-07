@@ -58,6 +58,13 @@ Alternatively, you can use versions of this gem below 0.3.
       permit_params_on_create ...
       permit_params_on_update ...
       require_params_on_create ...
+      require_params_on_update ...
+
+      # If you don't worry about params checking, you can allow them all, but be careful:
+      permit_all_params
+
+      # For more advanced expirience, you can also permit/require for custom actions, for example:
+      filter_strong_params :require, [:your, :actions], [:list, :of, :keys]
    end
    ```
 3. Finally, don't forget to make the vars you use in your controllers
