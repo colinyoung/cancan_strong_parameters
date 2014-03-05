@@ -85,9 +85,11 @@ module CancanStrongParameters
             
             # original: parameters = keys.flatten + defaults
             #           parameters << hash
-            return warn("Not updating - no parameters key present for #{resource_name}") unless params[resource_name]
-            
-            self.params[resource_name] = params[resource_name].standardized.send method, *parameters
+            unless params[resource_name]
+              warn("Not updating - no parameters key present for #{resource_name}") 
+            else
+              self.params[resource_name] = params[resource_name].standardized.send method, *parameters
+            end
           end
         elsif hash.present?
           prepend_before_filter(filter_options) do
@@ -120,8 +122,9 @@ module CancanStrongParameters
     
     # Errors
     def warn msg
-      return unless Rails and Rails.logger
-      Rails.logger.warn(msg)
+      if Rails and Rails.logger
+        Rails.logger.warn(msg)
+      end
     end
 
   end
@@ -151,13 +154,13 @@ class Hash
   
   # Converts keyed nested_forms (like task_attributes: {"0" => {}}) to normal params arrays.
   def to_parameter_array
-    return self if self.empty?
-    
-    return self unless (k = self.keys.first).is_a?(String) and k[0..3] == "new_" or k.is_i? or k.is_hex?
-    
-    Array.new.tap do |a|
-      self.each do |k,v|
-        a << v.standardized
+    if self.empty? or !((k = self.keys.first).is_a?(String) and k[0..3] == "new_" or k.is_i? or k.is_hex?)
+      self
+    else
+      Array.new.tap do |a|
+        self.each do |k,v|
+          a << v.standardized
+        end
       end
     end
   end
